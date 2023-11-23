@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Facebook.API.Data;
 using Facebook.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Facebook.API.Controllers
 {   //http://localhost:5000/api/values
@@ -16,55 +17,55 @@ namespace Facebook.API.Controllers
         public ValuesController(DataContext context)
         {
             contextRO = context;
-            
+
         }
         // GET api/values
         [HttpGet]
-        public IActionResult GetValuesAll()
+        public async Task<IActionResult> GetValuesAll()
         {
-            var values=contextRO.Values.ToList();
+            var values = await contextRO.Values.ToListAsync();
             return Ok(values);
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public IActionResult GetValue(int id)
+        public async Task<IActionResult> GetValue(int id)
         {
-           var value=contextRO.Values.FirstOrDefault(x=>x.Id==id);
-           return Ok(value);
+            var value = await contextRO.Values.FirstOrDefaultAsync(x => x.Id == id);
+            return Ok(value);
         }
 
         // POST api/values
         [HttpPost]
-        public IActionResult AddValue([FromBody] Value value)
+        public async Task<IActionResult> AddValue([FromBody] Value value)
         {
             contextRO.Values.Add(value);
-            contextRO.SaveChanges();
+            await contextRO.SaveChangesAsync();
             return Ok(value);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult EditValue(int id, [FromBody] Value value)
+        public async Task<IActionResult> EditValue(int id, [FromBody] Value value)
         {
-            var data=contextRO.Values.Find(id);
-            data.Name=value.Name;
+            var data = await contextRO.Values.FindAsync(id);
+            data.Name = value.Name;
             contextRO.Values.Update(data);
-            contextRO.SaveChanges();
+            await contextRO.SaveChangesAsync();
             return Ok(data);
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteValue(int id)
+        public async Task<IActionResult> DeleteValue(int id)
         {
-            var data =contextRO.Values.Find(id);
+            var data = await contextRO.Values.FindAsync(id);
 
-            if(data==null)
-            return NoContent();
-            
+            if (data == null)
+                return NoContent();
+
             contextRO.Values.Remove(data);
-            contextRO.SaveChanges();
+            await contextRO.SaveChangesAsync();
             return Ok(data);
         }
     }
