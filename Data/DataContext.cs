@@ -14,5 +14,7 @@ namespace Facebook.API.Data
         public  DbSet<Value> Values { get; set; }  
         ////To jest tabela do bazy danych
         
+        public DbSet<User> Users { get; set; }
+        
     }
 }
