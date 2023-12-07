@@ -3,37 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Facebook.API.Data;
+using Facebook.API.Dtos;
 using Facebook.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Facebook.API.Controllers
 {
-     [Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    
+
     public class AuthController : ControllerBase
     {
         public IAuthRepository Repository { get; }
         public AuthController(IAuthRepository repository)
         {
             this.Repository = repository;
-            
+
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register (string username,string password)
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto) //kontroler korzysta z DTO
         {
-            username=username.ToLower(); //po to zeby login zawsze był malymi literami
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower(); //po to zeby login zawsze był malymi literami
 
-            if(await Repository.UserExists(username))
-            return BadRequest("Użytkownik o podanej nazwie już istnieje!");
+            if (await Repository.UserExists(userForRegisterDto.Username))
+                return BadRequest("Użytkownik o podanej nazwie już istnieje!");
 
-            var userToCreate=new User
+            var userToCreate = new User
             {
-                Username=username
+                Username = userForRegisterDto.Username
             };
 
-            var createdUser= await Repository.Register(userToCreate,password);
+            var createdUser = await Repository.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
+using System.Security.Cryptography;
 
 using Facebook.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +62,7 @@ namespace Facebook.API.Data
         #region method private
         private void CreatePasswordHashSalt(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using (var hmac = System.Security.Cryptography.HMACSHA512()
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -70,7 +71,7 @@ namespace Facebook.API.Data
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = System.Security.Cryptography.HMACSHA512(passwordSalt))
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
 
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
