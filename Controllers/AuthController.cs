@@ -24,6 +24,7 @@ namespace Facebook.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto) //kontroler korzysta z DTO
         {
+
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower(); //po to zeby login zawsze był malymi literami
 
             if (await Repository.UserExists(userForRegisterDto.Username))
