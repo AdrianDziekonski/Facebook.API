@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Facebook.API.Data;
 using Facebook.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Facebook.API.Controllers
 {   //http://localhost:5000/api/values
+    [Authorize]   //dodajemy autoryzacje tutaj nie w auth controller bo tamte metody potrzebne są wszytskim a te tylko po zalogowaniu, dotyczy kazdej metody 
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -20,6 +22,7 @@ namespace Facebook.API.Controllers
 
         }
         // GET api/values
+        //[AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetValuesAll()
         {
@@ -28,6 +31,7 @@ namespace Facebook.API.Controllers
         }
 
         // GET api/values/5
+       [AllowAnonymous]  //do testu pozwala na dostęp bez autoryzacji
         [HttpGet("{id}")]
         public async Task<IActionResult> GetValue(int id)
         {
@@ -70,3 +74,4 @@ namespace Facebook.API.Controllers
         }
     }
 }
+
