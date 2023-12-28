@@ -1,0 +1,33 @@
+[
+  '{{repeat(25)}}',
+  {
+    Username:'{{firstName("male")}}',
+    Password:'password',
+    Gender: 'mężczyzna',
+    DateOfBirth:'{{date(new Date(1993,0,1), new Date(2003,11,31), "YYYY-MM-dd")}}',
+   
+    Created: '{{date(new Date(2023,1,1), new Date(2023,11,31), "YYYY-MM-dd")}}',
+    LastActive: function(){return this.Created;},
+    City: '{{city()}}',
+    Country: '{{country()}}',
+    Work: '{{random("strażak","przedsiębiorca","freelancer","artysta")}}',
+    Car: '{{random("AUDI", "BMW","OPEL","KIA","SUBARU")}}',
+    Motto: '{{lorem(1,"sentences")}}',
+    Description: '{{lorem(1,"paragraphs")}}',
+    Personality: '{{random("ESTJ", "ISTJ","ENTJ","INTJ","ESTP","ISTP","ENTP","INTP","ESFJ","ISFJ","ENFJ","INFJ","ESFP","ISFP","ENFP ","INFP")}}',
+    Hobby: '{{lorem(1,"paragraphs")}}',
+    Sport: '{{lorem(1,"sentences")}}',
+    Movies: '{{lorem(1,"sentences")}}',
+    Music: '{{lorem(1,"sentences")}}',
+    
+    Photos: [
+      {
+        url: function(num){
+          return 'https://randomuser.me/api/portraits/men/' + num.integer(1,99) + '.jpg';
+        },
+        isMain:true,
+        description: '{{lorem()}}'
+      }
+      ]
+  }
+]

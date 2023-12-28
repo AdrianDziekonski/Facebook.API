@@ -15,6 +15,8 @@ namespace Facebook.API.Data
         ////To jest tabela do bazy danych
         
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Photo> Photos { get; set; }
         
     }
 }

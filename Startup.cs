@@ -34,6 +34,7 @@ namespace Facebook.API
             services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();  //bład dostepu do api
+            services.AddTransient<Seed>();
             services.AddScoped<IAuthRepository,AuthRepository>();  //rejestraacja repozytorium auth scoped coś dla srwisów pomiedzy lekkimi a cieższymi
             //dodajemy po czym ma przeprowadzić autntyfikacje i jej opcje
             //tych opcji do konca nie ogarniam 
@@ -55,13 +56,14 @@ namespace Facebook.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) //tu ważna jest klejność
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,Seed seeder) //tu ważna jest klejność
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
            
+            seeder.SeedUsers();
             app.UseCors(x=>x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); //bład dostepu do api
             app.UseAuthentication();
             app.UseMvc();
