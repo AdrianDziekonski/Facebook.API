@@ -34,10 +34,12 @@ namespace Facebook.API
             services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();  //bład dostepu do api
-            services.AddTransient<Seed>();
+            services.AddTransient<Seed>(); //klasa seed odczytuje i dodaje dane do bazy gdy jest pusta
             services.AddScoped<IAuthRepository,AuthRepository>();  //rejestraacja repozytorium auth scoped coś dla srwisów pomiedzy lekkimi a cieższymi
             //dodajemy po czym ma przeprowadzić autntyfikacje i jej opcje
             //tych opcji do konca nie ogarniam 
+            services.AddScoped<IGenericRepository,GenericRepository>();
+            services.AddScoped<IUserRepository,UserRepository>();
                
                 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         .AddJwtBearer(options =>{
