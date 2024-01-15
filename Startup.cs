@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Logging;
+using AutoMapper;
 
 namespace Facebook.API
 {
@@ -32,8 +33,12 @@ namespace Facebook.API
         public void ConfigureServices(IServiceCollection services) //tu kolwjność serwisów jest bez znazcenia
         {
             services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                    .AddJsonOptions(opt=>{
+                        opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    });
             services.AddCors();  //bład dostepu do api
+            services.AddAutoMapper();
             services.AddTransient<Seed>(); //klasa seed odczytuje i dodaje dane do bazy gdy jest pusta
             services.AddScoped<IAuthRepository,AuthRepository>();  //rejestraacja repozytorium auth scoped coś dla srwisów pomiedzy lekkimi a cieższymi
             //dodajemy po czym ma przeprowadzić autntyfikacje i jej opcje
