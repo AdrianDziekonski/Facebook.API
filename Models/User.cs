@@ -19,7 +19,7 @@ namespace Facebook.API.Models
         public DateTime LastActive { get; set; }
       
 
-        //zakładka info o uzytkowniku
+        //zakładka info dodatkowe
           public string City { get; set; }
         public string Country { get; set; }
         public string Work { get; set; }
