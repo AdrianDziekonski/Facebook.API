@@ -42,6 +42,7 @@ namespace Facebook.API
                         opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
             services.AddCors();  //bład dostepu do api
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySetting"));
             services.AddAutoMapper();
             services.AddTransient<Seed>(); //klasa seed odczytuje i dodaje dane do bazy gdy jest pusta
             services.AddScoped<IAuthRepository,AuthRepository>();  //rejestraacja repozytorium auth scoped coś dla srwisów pomiedzy lekkimi a cieższymi

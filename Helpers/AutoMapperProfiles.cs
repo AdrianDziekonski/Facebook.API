@@ -29,6 +29,9 @@ namespace Facebook.API.Helpers
                 })
                 ;  
             CreateMap<Photo,PhotosForDetailsDto>();//<z czego,na co>
+            CreateMap<UserForUpdateDto, User>();
+            CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<PhotoForCreationDto, Photo>();
 
         }
     }
