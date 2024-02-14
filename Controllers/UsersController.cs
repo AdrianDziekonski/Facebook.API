@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Facebook.API.Data;
 using Facebook.API.Dtos;
+using Facebook.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,12 +28,18 @@ namespace Facebook.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {   
+            var currentUserId=int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo=await _repo.GetUser(currentUserId);
+            userParams.UserId=currentUserId;
+            
 
-            var users=await _repo.GetUsers();
+            var users=await _repo.GetUsers(userParams);
 
             var usersToReturn= _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            Response.AddPAgination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             
             return Ok(usersToReturn);
     
@@ -41,7 +48,7 @@ namespace Facebook.API.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name="GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user= await _repo.GetUser(id);

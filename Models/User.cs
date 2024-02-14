@@ -39,5 +39,9 @@ namespace Facebook.API.Models
 
         //Zdjęcia
         public ICollection<Photo> Photos { get; set; }
+
+        //polubienie
+        public ICollection<Like> UserLikes{get;set;}  //kolekcja uzytkowników ktore user lubi
+        public ICollection<Like> UserIsLiked{get;set;}  //kolekcja userów ltorzy lubią go
     }
 }

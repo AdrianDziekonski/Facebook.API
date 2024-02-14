@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Facebook.API.Data;
 using Facebook.API.Dtos;
 using Facebook.API.Models;
@@ -21,11 +22,14 @@ namespace Facebook.API.Controllers
     {
         private readonly IAuthRepository repository;
         private readonly IConfiguration config;
+        public readonly IMapper _mapper ;
 
-        public AuthController(IAuthRepository repository, IConfiguration config)
+        public AuthController(IAuthRepository repository, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             this.config = config;
             this.repository = repository;
+           
 
         }
 
@@ -38,14 +42,13 @@ namespace Facebook.API.Controllers
             if (await repository.UserExists(userForRegisterDto.Username))
                 return BadRequest("Użytkownik o podanej nazwie już istnieje!");
 
-            var userToCreate = new User
-            {
-                Username = userForRegisterDto.Username
-            };
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
             var createdUser = await repository.Register(userToCreate, userForRegisterDto.Password);
 
-            return StatusCode(201);
+            var userToReturn=_mapper.Map<UserForDetailsDto>(createdUser);
+
+            return CreatedAtRoute("GetUser", new{controller="Users",Id=createdUser.Id},userToReturn);
         }
 
         [HttpPost("login")]
@@ -86,7 +89,11 @@ namespace Facebook.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new { token = tokenHandler.WriteToken(token) });
+            var user= _mapper.Map<UserForListDto>(userFromRepo);
+
+            return Ok(new { token = tokenHandler.WriteToken(token),
+            user
+             });
 
 
         }

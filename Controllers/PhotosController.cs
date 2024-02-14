@@ -96,5 +96,68 @@ namespace Facebook.API.Controllers
 
             return Ok(photoForReturn);
         }
+
+        [HttpPost("{id}/setMain")]
+        public async Task<IActionResult> SetMainPhoto (int userId, int id)
+        {
+                if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+
+                return Unauthorized();
+
+                var user=await _repository.GetUser(userId);
+                
+                if(!user.Photos.Any(p=> p.Id==id))
+                return Unauthorized();
+
+                var photFromRepo= await _repository.GetPhoto(id);
+
+                if(photFromRepo.IsMain)
+                return BadRequest("To jest już główne zdjęcie");
+
+                var currentMainPhoto= await _repository.GetMainPhotoForUser(userId);
+                currentMainPhoto.IsMain=false;
+                photFromRepo.IsMain=true;
+
+                if(await _repository.SaveAll())
+                return NoContent();
+
+                return BadRequest("Nie można ustawić zdjęcia jako główne");
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhoto (int userId, int id)
+        {
+               if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+
+                return Unauthorized();
+
+                var user=await _repository.GetUser(userId);
+                
+                if(!user.Photos.Any(p=> p.Id==id))
+                return Unauthorized();
+
+                var photFromRepo= await _repository.GetPhoto(id);
+
+                if(photFromRepo.IsMain)
+                return BadRequest("Nie można usunąć zdjęcia głównego");
+
+                if(photFromRepo.public_id !=null)
+                {  
+                    var deleteParams= new DeletionParams(photFromRepo.public_id);
+                var result= _claudinary.Destroy(deleteParams);
+
+                if(result.Result=="ok")
+                _repository.Delete(photFromRepo);
+                }
+              
+              if(photFromRepo.public_id ==null)
+              _repository.Delete(photFromRepo);
+
+                if(await _repository.SaveAll())
+                return Ok();
+
+                return BadRequest("Nie udało się usunąć zdjęcia");
+        }
     }
 }
