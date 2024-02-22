@@ -100,5 +100,45 @@ namespace Facebook.API.Data
                 return user.UserIsLiked.Where(u => u.UserLikesId == id).Select(i => i.UserIsLikedId);
             }
         }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
+        {
+            var messeges = _context.Messages.Include(u => u.Sender).ThenInclude(p => p.Photos)
+                                            .Include(u => u.Recipient).ThenInclude(p => p.Photos).AsQueryable();
+
+            switch (messageParams.MessageContainer)
+            {
+                case "Inbox":
+                    messeges = messeges.Where(u => u.RecipientId == messageParams.UserId && u.RecipientDelete == false);
+                    break;
+
+                case "Outbox":
+                    messeges = messeges.Where(u => u.SenderId == messageParams.UserId && u.SenderDelete == false);
+                    break;
+                default:
+                    messeges = messeges.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false && u.RecipientDelete == false);
+                    break;
+            }
+
+            messeges = messeges.OrderByDescending(d => d.DateSent);
+
+            return await PagedList<Message>.CreateListAsync(messeges, messageParams.PageNumber, messageParams.PageSize);
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId)
+        {
+            var messeges = await _context.Messages
+                              .Include(u => u.Sender).ThenInclude(p => p.Photos)
+                              .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+                              .Where(m => m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDelete == false
+                              || m.RecipientId == recipientId && m.SenderId == userId && m.SenderDelete == false).OrderByDescending(m => m.DateSent).ToListAsync();
+
+            return messeges;
+        }
     }
 }

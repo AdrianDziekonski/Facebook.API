@@ -10,10 +10,12 @@ using Facebook.API.Helpers;
 using Facebook.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PortalRandkowy.API.Helpers;
 
 namespace Facebook.API.Controllers
 {
 
+    //[ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

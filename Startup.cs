@@ -36,6 +36,39 @@ namespace Facebook.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) //tu kolwjność serwisów jest bez znazcenia
         {
+            services.AddDbContext<DataContext>(x=>x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                    .AddJsonOptions(opt=>{
+                        opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    });
+            services.AddCors();  //bład dostepu do api
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySetting"));
+            services.AddAutoMapper();
+            services.AddTransient<Seed>(); //klasa seed odczytuje i dodaje dane do bazy gdy jest pusta
+            services.AddScoped<IAuthRepository,AuthRepository>();  //rejestraacja repozytorium auth scoped coś dla srwisów pomiedzy lekkimi a cieższymi
+            //dodajemy po czym ma przeprowadzić autntyfikacje i jej opcje
+            //tych opcji do konca nie ogarniam 
+            services.AddScoped<IGenericRepository,GenericRepository>();
+            services.AddScoped<IUserRepository,UserRepository>();
+               
+                services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                        .AddJwtBearer(options =>{
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                                ValidateIssuer = false,
+                                ValidateAudience = false,
+                                
+                            };
+                        IdentityModelEventSource.ShowPII = true;
+                        //showPII pokazuje błąd tokena w konsoli
+
+                        });
+        }
+
+         public void ConfigureDevelopmentServices(IServiceCollection services) //tu kolwjność serwisów jest bez znazcenia
+        {
             services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                     .AddJsonOptions(opt=>{
@@ -96,7 +129,13 @@ namespace Facebook.API
             seeder.SeedUsers();
             app.UseCors(x=>x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); //bład dostepu do api
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseMvc(routes=>{
+                routes.MapSpaFallbackRoute(
+                    name: "spa",
+                     defaults: new {controller="Fallback", action="Index"});
+            });
         }
     }
 }

@@ -43,5 +43,9 @@ namespace Facebook.API.Models
         //polubienie
         public ICollection<Like> UserLikes{get;set;}  //kolekcja uzytkowników ktore user lubi
         public ICollection<Like> UserIsLiked{get;set;}  //kolekcja userów ltorzy lubią go
+
+        public ICollection<Message> MessagesSent {get; set;}  // wiadomości wysłane
+
+        public ICollection<Message> MessagesRecived {get; set;}  // wiadomości odebrane
     }
 }
