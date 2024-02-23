@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
+//pomocnicze metody, np oblicz wiek uzytkownika
+
 namespace Facebook.API.Helpers
 {
     public static class Extensions

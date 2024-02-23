@@ -1,4 +1,6 @@
-﻿using System;
+﻿//w startup konfigurujemy wszytie usługi, wstrzykujemy serwisy itp
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,7 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Facebook.API.Helpers;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Facebook.API
 {
@@ -36,7 +39,7 @@ namespace Facebook.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) //tu kolwjność serwisów jest bez znazcenia
         {
-            services.AddDbContext<DataContext>(x=>x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x=>x.UseMySql(Configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(warnings=>warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                     .AddJsonOptions(opt=>{
                         opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -69,7 +72,7 @@ namespace Facebook.API
 
          public void ConfigureDevelopmentServices(IServiceCollection services) //tu kolwjność serwisów jest bez znazcenia
         {
-            services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x=>x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                     .AddJsonOptions(opt=>{
                         opt.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -100,6 +103,8 @@ namespace Facebook.API
                         });
         }
 
+        //komponenty do obsugi żądań 
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,Seed seeder) //tu ważna jest klejność
         {

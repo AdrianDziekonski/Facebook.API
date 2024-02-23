@@ -30,7 +30,7 @@ namespace Facebook.API.Controllers
 
         }
 
-        [HttpGet("{id}", Name = "GetMessage")]
+        [HttpGet("{id}", Name = "GetMessage")] //pobierz wiadomosc
         public async Task<IActionResult> GetMessage(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -45,7 +45,7 @@ namespace Facebook.API.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet]  //pobierz wiadomosc dla uzytkownika
         public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery]MessageParams messageParams)
         {
              if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -66,7 +66,7 @@ namespace Facebook.API.Controllers
         }
 
 
-        [HttpGet("thread/{recipientId}")]
+        [HttpGet("thread/{recipientId}")]  //watek wiadomosci dla uzytkownika i odbiorcy
         public async Task<IActionResult> GetMessagesThread (int userId, int recipientId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -78,7 +78,7 @@ namespace Facebook.API.Controllers
             return Ok(messageThread); 
         }
 
-        [HttpPost]
+        [HttpPost]  //utworz wiadomosc
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
         {
             var sender= await _repository.GetUser(userId);
@@ -109,7 +109,7 @@ namespace Facebook.API.Controllers
             throw new Exception("Utworznie wiadomości nie powiodło się podczas zapisu");
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{id}")]  //usun wiadomosc
         public async Task<IActionResult> DeleteMessage(int id, int userId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -132,7 +132,7 @@ namespace Facebook.API.Controllers
             throw new Exception("Błąd podczas usuwania wiadomości") ;           
         }
 
-        [HttpPost("{id}/read")]
+        [HttpPost("{id}/read")]  //oznacz jako przeczytana
         public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

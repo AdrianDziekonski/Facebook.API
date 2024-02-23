@@ -6,6 +6,8 @@ using AutoMapper;
 using Facebook.API.Dtos;
 using Facebook.API.Models;
 
+//mapowanie danych obiektow 
+
 namespace Facebook.API.Helpers
 {
     public class AutoMapperProfiles : Profile //domyślny profil chyba

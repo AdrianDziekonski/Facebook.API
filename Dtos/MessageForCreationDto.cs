@@ -20,3 +20,7 @@ namespace Facebook.API.Dtos
         }
     }
 }
+
+
+///data transfer object 
+//obiekt do transferu danych na prostsze

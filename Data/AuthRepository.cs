@@ -1,3 +1,6 @@
+//te klasy odpowiadaja za dane
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

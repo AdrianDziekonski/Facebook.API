@@ -43,7 +43,7 @@ namespace Facebook.API.Controllers
             _claudinary = new Cloudinary(account);
         }
 
-        [HttpPost]
+        [HttpPost]  //dodaj zdjecie 
         public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm]PhotoForCreationDto photoForCreationDto)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -87,7 +87,7 @@ namespace Facebook.API.Controllers
             return BadRequest("Nie można dodać zdjęcia");
         }
 
-        [HttpGet("{id}", Name= "GetPhoto")]
+        [HttpGet("{id}", Name= "GetPhoto")]  //pobierz zdjecie
         public async Task<IActionResult> GetPhoto (int id)
         {
             var photoFromRepo= await _repository.GetPhoto(id);
@@ -97,7 +97,7 @@ namespace Facebook.API.Controllers
             return Ok(photoForReturn);
         }
 
-        [HttpPost("{id}/setMain")]
+        [HttpPost("{id}/setMain")]  //ustaw jako zdjecie głowne
         public async Task<IActionResult> SetMainPhoto (int userId, int id)
         {
                 if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -125,7 +125,7 @@ namespace Facebook.API.Controllers
 
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")]  //usun zdjecie 
         public async Task<IActionResult> DeletePhoto (int userId, int id)
         {
                if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

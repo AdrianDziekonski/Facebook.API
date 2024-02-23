@@ -21,3 +21,5 @@ namespace Facebook.API.Helpers
         public string MessageContainer { get; set; } ="Nieprzeczytane";
     }
 }
+
+//dane o page potzrebne do paginacji

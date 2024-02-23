@@ -12,3 +12,5 @@ namespace Facebook.API.Helpers
         public string ApiSecret { get; set; }   
     }
 }
+
+//chmura do zdjec, setting potrzebne do konfiguracji

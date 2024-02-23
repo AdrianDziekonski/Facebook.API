@@ -1,4 +1,7 @@
-﻿using System;
+﻿//ta klasa odpowiada za uruchomienie aplikacji przekazuje tu sie startup w ktorej konfigurujemy wszytkie usługi
+
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,3 +26,5 @@ namespace Facebook.API
                 .UseStartup<Startup>();
     }
 }
+
+

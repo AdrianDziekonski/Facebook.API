@@ -30,7 +30,7 @@ namespace Facebook.API.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet]   //pobierz liste uzytkownikow
         public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -51,7 +51,7 @@ namespace Facebook.API.Controllers
 
         }
 
-        [HttpGet("{id}", Name = "GetUser")]
+        [HttpGet("{id}", Name = "GetUser")] //  pobierz konkretnego uzytkownika
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);
@@ -62,7 +62,7 @@ namespace Facebook.API.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}")]           //zaktualizuj dane o uzytkowniku
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -78,7 +78,7 @@ namespace Facebook.API.Controllers
             throw new Exception($"Aktualizacja użytkownika o id: {id} nie powiodła się przy zapisywaniu do bazy");
         }
 
-        [HttpPost("{id}/like/{recipientId}")]
+        [HttpPost("{id}/like/{recipientId}")]       //polub uzytkownika
         public async Task<IActionResult> LikeUser(int id, int recipientId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

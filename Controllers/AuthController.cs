@@ -1,3 +1,5 @@
+//Controllers    jest odpowiedzialny za generowanie odpowiedzi na żądanie przeglądarki. Na przykład kontroler może zwrócić określony widok z powrotem do przeglądarki lub kontroler może przekierować użytkownika do innego kontrolera.
+
 using System;
 //using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
